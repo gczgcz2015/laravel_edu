@@ -22,7 +22,6 @@ class CreateUsersTable extends Migration
             // 完善用户(老师)字段 
             $table->string('avatar'); // 头像
             $table->string('mobile'); // 手机
-            // $table->string('wx_qrcode'); // 微信二维码
             $table->string('person_title'); // 头衔
             $table->string('idcard'); // 身份证号
             $table->string('id_font'); // 身份证正面
