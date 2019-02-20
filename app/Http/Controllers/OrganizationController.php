@@ -12,7 +12,7 @@ use App\Http\Response;
 class OrganizationController extends Controller
 {
     /**
-     * 获取老师信息
+     * 创建机构
      */
     public function OrganizationCreate(Request $request) {
 
@@ -46,6 +46,9 @@ class OrganizationController extends Controller
         return $org;
     }
 
+    /**
+     * 机构信息
+     */
     public function OrganizationInfo(Request $request, $id)
     {
         $cache = Cache::get('organization_'.$id);
@@ -54,5 +57,13 @@ class OrganizationController extends Controller
         }
         $org = Organization::find($id);
         return $org;
+    }
+
+    /**
+     * 邀请老师
+     */
+    public function InviteTeacher(Request $request)
+    {
+
     }
 }

@@ -53,10 +53,13 @@ class UserController extends Controller
         $user = $request->user();
         $user->update(request(['avatar', 'mobile', 'person_title', 'idcard', 'id_font', 'id_back']));
         // 缓存处理
-        // Cache::put($user->id, $user, PHP_INT_MAX);
+        // Cache::put($user->id, $user, 60*60);
         return $user;
     }
 
+    /**
+     * 注册成功后返回
+     */
     protected function registered(Request $request, $user)
     {
         $user->generateToken();
