@@ -12,6 +12,16 @@ class Organization extends Model
      * @var array
      */
     protected $fillable = [
-        'logo', 'bank', 'bank_card', 'address', 'status', 'reason'
+        'logo', 'bank', 'bank_card', 'address', 'status', 'reason', 'user_id'
     ];
+
+    public function teacher()
+    {
+        return $this->belongsTo('App\User', 'user_id', 'id');
+    }
+
+    // public function info($id)
+    // {
+    //     // return $this
+    // }
 }

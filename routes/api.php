@@ -21,6 +21,7 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::put('teacher/edit', 'UserController@teacherEdit');
     Route::get('teacher/info', 'UserController@teacherInfo');
     Route::post('organization', 'OrganizationController@OrganizationCreate');
+    Route::get('organization/{id}', 'OrganizationController@OrganizationInfo');
 });
 
 Route::post('register', 'Auth\RegisterController@register');

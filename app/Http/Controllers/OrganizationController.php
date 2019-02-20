@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Organization;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Cache;
+use App\Http\Response;
 
 class OrganizationController extends Controller
 {
@@ -15,13 +17,11 @@ class OrganizationController extends Controller
     public function OrganizationCreate(Request $request) {
 
         $user = Auth::user();
-        $org = Organization::where('user_id', $user->id)->get();
+
+        // 判断是否已创建机构
+        $org = Organization::where('user_id', $user->id)->first();
         if ($org != null) {
-            return \response()->json([
-                'status' => 0,
-                'response_time' => time(),
-                'error_msg' => '已创建机构'
-            ]);
+            return Response::errorMessage('已创建机构');
         }
         $validator = Validator::make($request->all(), [
             'logo' => 'required|max:255|min:4',
@@ -30,21 +30,29 @@ class OrganizationController extends Controller
             'bank_card' => 'max:100|min:10',
         ]);
         if ($validator->fails()) {
-            return \response()->json([
-                'status' => 0,
-                'response_time' => time(),
-                'error_msg' => $validator->errors()
-            ]);
+            return Response::errorMessage($validator->errors());
         }
         $data = $request->all();
-        return Organization::create([
+        $org = Organization::create([
+            'user_id' => $user->id,
             'logo' => $data['logo'],
             'address' => $data['address'],
             'bank' => $data['bank'],
             'bank_card' => $request->input('bank_card', ''),
             'status' => 0,
             'reason' => '',
-            'user_id' => $user->id,
         ]);
+        Cache::put('organization_'.$org->id, $org, 86400*30);
+        return $org;
+    }
+
+    public function OrganizationInfo(Request $request, $id)
+    {
+        $cache = Cache::get('organization_'.$id);
+        if ($cache != null) {
+            return $cache;
+        }
+        $org = Organization::find($id);
+        return $org;
     }
 }
